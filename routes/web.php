@@ -13,6 +13,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DataKerobokanKajaController;
+use App\Http\Controllers\UsulanDanaBantuanController;
+use App\Http\Controllers\DataBantuanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +64,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['admin', 'auto.logout'])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user');
+    Route::get('/usulan_dana_bantuan', [App\Http\Controllers\UsulanDanaBantuanController::class, 'index'])->name('usulan_dana_bantuan');
+    Route::get('/cetak_laporan_usulan_dana_bantuan', [App\Http\Controllers\UsulanDanaBantuanController::class, 'cetak_laporan'])->name('cetak_laporan_usulan_dana_bantuan');
+
+    Route::get('/cetak_laporan_dana_bantuan', [App\Http\Controllers\DataBantuanController::class, 'cetak_laporan'])->name('cetak_laporan_dana_bantuan');
+
+    Route::get('/data_bantuan', [App\Http\Controllers\DataBantuanController::class, 'index'])->name('data_bantuan');
     Route::get('/data_penduduk', [App\Http\Controllers\DataPendudukController::class, 'index'])->name('data_penduduk');
     Route::get('/banjar', [App\Http\Controllers\BanjarController::class, 'index'])->name('banjar');
     Route::resource('banjars', App\Http\Controllers\BanjarController::class);
@@ -88,6 +96,11 @@ Route::middleware(['admin', 'auto.logout'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class,'index'])->name('home');
     Route::resource('kepala_lingkungans', App\Http\Controllers\KepalaLingkunganController::class);
     Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::post('/usulan_dana_bantuans/{id}/accept', [UsulanDanaBantuanController::class, 'accept'])->name('usulan_dana_bantuans.accept');
+    Route::post('/usulan_dana_bantuans/{id}/reject', [UsulanDanaBantuanController::class, 'reject'])->name('usulan_dana_bantuans.reject');
+
+    Route::get('/export-xlsx', [UsulanDanaBantuanController::class, 'exportXlsx'])->name('export.xlsx');
+    Route::get('/export-xlsx2', [DataBantuanController::class, 'exportXlsx'])->name('export-2.xlsx');
 
 });
 
@@ -128,6 +141,9 @@ Route::middleware(['user', 'auto.logout'])->group(function () {
 
     Route::post('/pelaporan/{id}/store-kualitasangkatankerja', [PelaporanController::class, 'store_kualitasangkatankerja'])->name('pelaporan.store_kualitasangkatankerja');
     Route::delete('/pelaporan/{id}/kualitasangkatankerja/{kualitasangkatankerjaId}', [PelaporanController::class, 'destroy_kualitasangkatankerja'])->name('pelaporan.destroy_kualitasangkatankerja');
+
+    Route::post('/pelaporan/impor_data_laporan', [PelaporanController::class, 'imporDataLaporan'])->name('pelaporan.impor_data_laporan');
+
     // Route::resource('kepala_lingkungans', App\Http\Controllers\KepalaLingkunganController::class);
     Route::get('/kepala_lingkungans/{id}/biodata', [KepalaLingkunganController::class, 'biodata'])->name('kepala_lingkungans.biodata');
     Route::put('/kepala_lingkungans/{id}/update_biodata', [KepalaLingkunganController::class, 'update_biodata'])->name('kepala_lingkungans.update_biodata');
@@ -136,5 +152,10 @@ Route::middleware(['user', 'auto.logout'])->group(function () {
     Route::put('/users/{id}/change_password', [UserController::class, 'changePassword2'])->name('users.changePassword2');
     Route::get('/cetak-laporan-lingkungan/{id}', [PelaporanController::class, 'cetak_laporan_lingkungan'])->name('cetak_laporan_lingkungan');
     
-    
+    Route::get('/usulan_dana_bantuan_kaling', [App\Http\Controllers\UsulanDanaBantuanController::class, 'index_kaling'])->name('usulan_dana_bantuan_kaling');
+    Route::delete('/usulan-dana-bantuan-kaling/{id}', [App\Http\Controllers\UsulanDanaBantuanController::class, 'destroy'])->name('usulan_dana_bantuan_kaling.destroy');
+    Route::get('/usulan_dana_bantuan/create', [App\Http\Controllers\UsulanDanaBantuanController::class, 'create'])->name('usulan_dana_bantuan.create');
+    Route::post('/usulan_dana_bantuan/store', [App\Http\Controllers\UsulanDanaBantuanController::class, 'store'])->name('usulan_dana_bantuan.store');
+    Route::put('/usulan_dana_bantuan/{id}/ajukan_ulang', [UsulanDanaBantuanController::class, 'ajukanUlang'])->name('usulan_dana_bantuan.ajukan_ulang');
+
 });

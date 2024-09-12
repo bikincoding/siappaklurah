@@ -11,11 +11,13 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -144,7 +146,7 @@
             <div class="container-md">
                 <div class="row justify-content-center">
                     <div class="col-md-3 mb-3">
-                        <div class="card">
+                        <div class="card mb-3">
                             <div class="card-header warna-pns">{{ __('Menu') }}</div>
 
                             <div class="list-group list-group-flush">
@@ -155,6 +157,19 @@
                                 <a href="{{ route('pelaporan.index') }}"
                                     class="list-group-item list-group-item-action d-flex align-items-center">
                                     <i class="bi bi-envelope-fill me-3"></i>{{ __('Pelaporan') }}
+                                </a>
+
+                                <!-- More menu items -->
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header warna-pns">{{ __('SiGAB') }}</div>
+
+                            <div class="list-group list-group-flush">
+
+                                <a href="{{ route('usulan_dana_bantuan_kaling') }}"
+                                    class="list-group-item list-group-item-action d-flex align-items-center">
+                                    <i class="bi bi-wallet-fill me-3"></i>{{ __('Usulan Data Bantuan') }}
                                 </a>
                                 <!-- More menu items -->
                             </div>
@@ -169,11 +184,17 @@
         </main>
     </div>
 
+
+
     <!-- Scripts for Bootstrap 5 -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+
+
     @yield('javascripts')
     <script>
     $(document).ready(function() {
@@ -186,7 +207,54 @@
             autoWidth: true
         });
     });
+
+    $(document).ready(function() {
+        $('.table-untuk-data').DataTable({
+            "pagingType": "simple_numbers",
+            "responsive": true,
+            "language": {
+                "lengthMenu": "Tampilkan _MENU_ entri",
+                "zeroRecords": "Tidak ada data yang ditemukan",
+                "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                "infoEmpty": "Tidak ada entri yang tersedia",
+                "infoFiltered": "(disaring dari _MAX_ total entri)",
+                "search": "Cari:",
+                "paginate": {
+                    "first": "Pertama",
+                    "last": "Terakhir",
+                    "next": "Selanjutnya",
+                    "previous": "Sebelumnya"
+                },
+            },
+            "dom": "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            "order": [
+                [0, 'asc']
+            ]
+        });
+    });
     </script>
+
+    <script src="{{ asset('vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script>
+    tinymce.init({
+        selector: 'textarea.html-editor', // Selector untuk textarea yang ingin diubah menjadi TinyMCE editor
+        plugins: 'lists link image preview textcolor colorpicker', // Tambahkan 'textcolor' dan 'colorpicker' di sini
+        toolbar: 'undo redo | formatselect | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | preview',
+        menubar: false,
+        height: 300,
+        setup: function(editor) {
+            editor.ui.registry.addButton('myCustomButton', {
+                text: 'Custom Button',
+                onAction: function() {
+                    editor.insertContent('<p>Button clicked!</p>');
+                }
+            });
+        }
+    });
+    </script>
+
 </body>
 
 </html>

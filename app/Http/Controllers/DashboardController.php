@@ -15,9 +15,11 @@ class DashboardController extends Controller
     public function index()
     {
         // Ambil semua data pegawai
-        $pegawais = Pegawai::all();
+        $pegawais = Pegawai::where('nip', '!=', '198703012006021001')->get();
+
+        $pak_lurah = Pegawai::where('nip', '198703012006021001')->first();
 
         // Tampilkan view admin.dashboard dengan data pegawai
-        return view('admin.dashboard', compact('pegawais'));
+        return view('admin.dashboard', compact('pegawais', 'pak_lurah'));
     }
 }

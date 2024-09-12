@@ -147,18 +147,23 @@
                                 <!-- More menu items -->
                             </div>
                         </div>
-                        <!-- <div class="card mb-4">
-                            <div class="card-header warna-pns">{{ __('Data Sosial') }}</div>
+
+                        <div class="card mb-4">
+                            <div class="card-header warna-pns">{{ __('SiGAB') }}</div>
 
                             <div class="list-group list-group-flush">
-                                <a href="{{ route('user') }}"
+                                <a href="{{ route('usulan_dana_bantuan') }}"
                                     class="list-group-item list-group-item-action d-flex align-items-center">
-                                    <i class="bi bi-person-fill me-3"></i>{{ __('Data Pokok Sosial') }}
+                                    <i class="bi bi-wallet-fill me-3"></i>{{ __('Usulan Data Bantuan') }}
                                 </a>
-
-                              
+                                <a href="{{ route('data_bantuan') }}"
+                                    class="list-group-item list-group-item-action d-flex align-items-center">
+                                    <i class="bi bi-wallet-fill me-3"></i>{{ __('Data Bantuan') }}
+                                </a>
                             </div>
-                        </div> -->
+
+                        </div>
+
                         <div class="card mb-4">
                             <div class="card-header warna-pns">{{ __('Setting') }}</div>
 
@@ -200,6 +205,24 @@
 
         </main>
     </div>
+    <script src="{{ asset('vendor/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script>
+    tinymce.init({
+        selector: 'textarea.html-editor', // Selector untuk textarea yang ingin diubah menjadi TinyMCE editor
+        plugins: 'lists link image preview textcolor colorpicker', // Tambahkan 'textcolor' dan 'colorpicker' di sini
+        toolbar: 'undo redo | formatselect | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | preview',
+        menubar: false,
+        height: 300,
+        setup: function(editor) {
+            editor.ui.registry.addButton('myCustomButton', {
+                text: 'Custom Button',
+                onAction: function() {
+                    editor.insertContent('<p>Button clicked!</p>');
+                }
+            });
+        }
+    });
+    </script>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
@@ -246,6 +269,9 @@
     </script>
 
 
+
+
+    @yield('javascript')
 
 </body>
 

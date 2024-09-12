@@ -82,8 +82,63 @@
             </div>
         </div> -->
         <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="card warna-pns">
+                    <div class="card-body">
+                        <form action="{{ route('pelaporan.impor_data_laporan') }}" method="POST">
+                            @csrf
+                            <div class="row align-items-center">
+                                <label for="selectLaporanBulanTahun" class="col-sm-3 col-form-label">
+                                    Impor Data Laporan
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class="form-select" id="selectLaporanBulanTahun"
+                                        name="selectLaporanBulanTahun">
+                                        <option value="">Pilih laporan yang ingin diimpor ...</option>
+                                        @php
+                                        $bulanNama = [
+                                        1 => 'Januari',
+                                        2 => 'Februari',
+                                        3 => 'Maret',
+                                        4 => 'April',
+                                        5 => 'Mei',
+                                        6 => 'Juni',
+                                        7 => 'Juli',
+                                        8 => 'Agustus',
+                                        9 => 'September',
+                                        10 => 'Oktober',
+                                        11 => 'November',
+                                        12 => 'Desember'
+                                        ];
+                                        @endphp
+                                        @foreach($laporans as $laporan)
+                                        <option value="{{ $laporan->id }}">
+                                            Laporan {{ $bulanNama[$laporan->bulan] }} {{ $laporan->tahun }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <input type="hidden" name="idBanjar"
+                                        value="{{ Auth::user()->kepala_lingkungan->banjar->id }}">
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip"
+                                        title="Mengkopi data dari bulan yang dipilih ke form dibawah">
+                                        Impor Data
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row mb-3">
             <div class="col-md-12 mb-12">
-                <div class="card">
+                <div class="card warna-pns">
                     <div class="card-body">
                         <select class="form-select" id="selectOption" name="selectOption">
                             <option>Pilih satu opsi...</option>
@@ -144,7 +199,9 @@
                             </table>
 
                             <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-success">Simpan</button>
+
+
+                                <button type="submit" class="btn btn-success ms-1">Simpan</button>
                             </div>
                         </form>
 
@@ -900,6 +957,14 @@
 @endsection
 
 @section('javascripts')
+
+<script>
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+</script>
+
 @if(session('success'))
 <script>
 Swal.fire({

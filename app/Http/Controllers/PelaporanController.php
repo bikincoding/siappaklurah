@@ -27,13 +27,267 @@ class PelaporanController extends Controller
      */
     public function index()
     {
+        // $laporans = LaporanBulanTahun::all();
+        // return view('user.pelaporan', compact('laporans'))
+        // ->with('i', (request()->input('page', 1) - 1) * 5);
+
         $laporans = LaporanBulanTahun::all();
-        return view('user.pelaporan', compact('laporans'))
+    return view('user.pelaporan', compact('laporans'))
         ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+
+    public function imporDataLaporan(Request $request)
+    {
+        
+       // Ambil ID laporan dari input selectLaporanBulanTahun
+        $laporanId = $request->input('selectLaporanBulanTahun');
+
+
+        
+        $formLaporanId = session('FormLaporanId');
+        $banjarId = Auth::user()->kepala_lingkungan->banjar->id;
+
+
+        // Query untuk mendapatkan data Sumber Daya Manusia berdasarkan id_laporan_bulan_tahuns
+        $sumberDayaManusia = SumberDayaManusia::where('id_laporan_bulan_tahuns', $laporanId)
+                                       ->where('id_banjars', $banjarId)
+                                       ->get();
+
+
+
+        // Menyalin atau memperbarui data di tabel sumber_daya_manusias dengan id_laporan_bulan_tahuns yang baru
+        foreach ($sumberDayaManusia as $data) {
+            SumberDayaManusia::updateOrCreate(
+                [
+                    'id_laporan_bulan_tahuns' => $formLaporanId,
+                    'id_banjars' => $data->id_banjars,
+                ],
+                [
+                    'jumlah_laki_laki' => $data->jumlah_laki_laki,
+                    'jumlah_perempuan' => $data->jumlah_perempuan,
+                    'jumlah_total' => $data->jumlah_total,
+                    'jumlah_kepala_keluarga' => $data->jumlah_kepala_keluarga,
+                    'kepadatan_penduduk' => $data->kepadatan_penduduk,
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        // Melakukan hal yang sama untuk tabel usias
+        $usias = Usia::where('id_laporan_bulan_tahuns', $laporanId)->where('id_banjars', $banjarId)->get();
+
+   
+
+        // Menyalin atau memperbarui data di tabel usias dengan id_laporan_bulan_tahuns yang baru
+        foreach ($usias as $usia) {
+            Usia::updateOrCreate(
+                [
+                    'id_laporan_bulan_tahuns' => $formLaporanId,
+                    'id_banjars' => $usia->id_banjars,
+                    'usia' => $usia->usia,
+                ],
+                [
+                    'laki_laki' => $usia->laki_laki,
+                    'perempuan' => $usia->perempuan,
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        $pendidikans = Pendidikan::where('id_laporan_bulan_tahuns', $laporanId)->where('id_banjars', $banjarId)->get();
+
+
+    
+        // Menyalin atau memperbarui data di tabel pendidikans dengan id_laporan_bulan_tahuns yang baru
+        foreach ($pendidikans as $pendidikan) {
+            Pendidikan::updateOrCreate(
+                [
+                    'id_laporan_bulan_tahuns' => $formLaporanId,
+                    'id_banjars' => $pendidikan->id_banjars,
+                    'tingkatan_pendidikan' => $pendidikan->tingkatan_pendidikan,
+                ],
+                [
+                    'laki_laki' => $pendidikan->laki_laki,
+                    'perempuan' => $pendidikan->perempuan,
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        // Query untuk mendapatkan data Mata Pencaharian Pokoks berdasarkan id_laporan_bulan_tahuns
+    $mataPencaharianPokoks = MataPencaharianPokok::where('id_laporan_bulan_tahuns', $laporanId)->where('id_banjars', $banjarId)->get();
+
+
+
+    // Menyalin atau memperbarui data di tabel mata_pencaharian_pokoks dengan id_laporan_bulan_tahuns yang baru
+    foreach ($mataPencaharianPokoks as $mp) {
+        MataPencaharianPokok::updateOrCreate(
+            [
+                'id_laporan_bulan_tahuns' => $formLaporanId,
+                'id_banjars' => $mp->id_banjars,
+                'jenis_pekerjaan' => $mp->jenis_pekerjaan,
+            ],
+            [
+                'laki_laki' => $mp->laki_laki,
+                'perempuan' => $mp->perempuan,
+                'updated_at' => now(),
+            ]
+        );
+    }
+
+    // Query untuk mendapatkan data Agamas berdasarkan id_laporan_bulan_tahuns
+    $agamas = Agama::where('id_laporan_bulan_tahuns', $laporanId)->where('id_banjars', $banjarId)->get();
+
+    // Lakukan pengecekan jika data tidak ditemukan
+    if ($agamas->isEmpty()) {
+        return redirect()->back()->with('error', 'Data Agama tidak ditemukan untuk laporan ini.');
+    }
+
+    // Menyalin atau memperbarui data di tabel agamas dengan id_laporan_bulan_tahuns yang baru
+    foreach ($agamas as $agama) {
+        Agama::updateOrCreate(
+            [
+                'id_laporan_bulan_tahuns' => $formLaporanId,
+                'id_banjars' => $agama->id_banjars,
+                'agama' => $agama->agama,
+            ],
+            [
+                'laki_laki' => $agama->laki_laki,
+                'perempuan' => $agama->perempuan,
+                'updated_at' => now(),
+            ]
+        );
+    }
+
+    // Query untuk mendapatkan data Kewarganegaraans berdasarkan id_laporan_bulan_tahuns
+$kewarganegaraans = Kewarganegaraan::where('id_laporan_bulan_tahuns', $laporanId)
+                                   ->where('id_banjars', $banjarId)
+                                   ->get();
+
+
+
+// Menyalin atau memperbarui data di tabel kewarganegaraans dengan id_laporan_bulan_tahuns yang baru
+foreach ($kewarganegaraans as $kewarganegaraan) {
+    Kewarganegaraan::updateOrCreate(
+        [
+            'id_laporan_bulan_tahuns' => $formLaporanId,
+            'id_banjars' => $kewarganegaraan->id_banjars,
+            'kewarganegaraan' => $kewarganegaraan->kewarganegaraan,
+        ],
+        [
+            'laki_laki' => $kewarganegaraan->laki_laki,
+            'perempuan' => $kewarganegaraan->perempuan,
+            'updated_at' => now(),
+        ]
+    );
+}
+
+// Query untuk mendapatkan data Etniss berdasarkan id_laporan_bulan_tahuns
+$etniss = Etnis::where('id_laporan_bulan_tahuns', $laporanId)
+               ->where('id_banjars', $banjarId)
+               ->get();
+
+
+
+// Menyalin atau memperbarui data di tabel etniss dengan id_laporan_bulan_tahuns yang baru
+foreach ($etniss as $etnis) {
+    Etnis::updateOrCreate(
+        [
+            'id_laporan_bulan_tahuns' => $formLaporanId,
+            'id_banjars' => $etnis->id_banjars,
+            'etnis' => $etnis->etnis,
+        ],
+        [
+            'laki_laki' => $etnis->laki_laki,
+            'perempuan' => $etnis->perempuan,
+            'updated_at' => now(),
+        ]
+    );
+}
+// Query untuk mendapatkan data Cacat Mental Fisik berdasarkan id_laporan_bulan_tahuns
+$cacatMentalFisiks = CacatMentalFisik::where('id_laporan_bulan_tahuns', $laporanId)
+                                      ->where('id_banjars', $banjarId)
+                                      ->get();
+
+
+
+// Menyalin atau memperbarui data di tabel cacat_mental_fisiks dengan id_laporan_bulan_tahuns yang baru
+foreach ($cacatMentalFisiks as $cacat) {
+    CacatMentalFisik::updateOrCreate(
+        [
+            'id_laporan_bulan_tahuns' => $formLaporanId,
+            'id_banjars' => $cacat->id_banjars,
+            'jenis_cacat' => $cacat->jenis_cacat,
+        ],
+        [
+            'laki_laki' => $cacat->laki_laki,
+            'perempuan' => $cacat->perempuan,
+            'updated_at' => now(),
+        ]
+    );
+}
+
+
+// Query untuk mendapatkan data Tenaga Kerja berdasarkan id_laporan_bulan_tahuns
+$tenagaKerjas = TenagaKerja::where('id_laporan_bulan_tahuns', $laporanId)
+                            ->where('id_banjars', $banjarId)
+                            ->get();
+
+
+
+// Menyalin atau memperbarui data di tabel tenaga_kerjas dengan id_laporan_bulan_tahuns yang baru
+foreach ($tenagaKerjas as $tenaga) {
+    TenagaKerja::updateOrCreate(
+        [
+            'id_laporan_bulan_tahuns' => $formLaporanId,
+            'id_banjars' => $tenaga->id_banjars,
+            'tenaga_kerja' => $tenaga->tenaga_kerja,
+        ],
+        [
+            'laki_laki' => $tenaga->laki_laki,
+            'perempuan' => $tenaga->perempuan,
+            'updated_at' => now(),
+        ]
+    );
+}
+// Query untuk mendapatkan data Kualitas Angkatan Kerja berdasarkan id_laporan_bulan_tahuns
+$kualitasAngkatanKerjas = KualitasAngkatanKerja::where('id_laporan_bulan_tahuns', $laporanId)
+                                                ->where('id_banjars', $banjarId)
+                                                ->get();
+
+
+
+// Menyalin atau memperbarui data di tabel kualitas_angkatan_kerjas dengan id_laporan_bulan_tahuns yang baru
+foreach ($kualitasAngkatanKerjas as $kualitas) {
+    KualitasAngkatanKerja::updateOrCreate(
+        [
+            'id_laporan_bulan_tahuns' => $formLaporanId,
+            'id_banjars' => $kualitas->id_banjars,
+            'angkatan_kerja' => $kualitas->angkatan_kerja,
+        ],
+        [
+            'laki_laki' => $kualitas->laki_laki,
+            'perempuan' => $kualitas->perempuan,
+            'updated_at' => now(),
+        ]
+    );
+}
+
+
+
+        // Redirect ke halaman sebelumnya atau ke halaman lain dengan pesan sukses
+        // return redirect()->route('pelaporan.index')->with('success', 'Data laporan berhasil diimpor.');
+        return redirect()->route('pelaporan.data_pokok', $formLaporanId )->with('success', 'Data berhasil disimpan')->withInput();
+
     }
 
     public function data_pokok(string $id)
     {
+
+        $laporans = LaporanBulanTahun::all();
+        session(['FormLaporanId' => $id]);
+
+        
         $banjarId = Auth::user()->kepala_lingkungan->banjar->id;
         $laporanBulanTahun = LaporanBulanTahun::find($id);
         $sumberDayaManusia = SumberDayaManusia::where('id_laporan_bulan_tahuns', $id)
@@ -88,7 +342,7 @@ class PelaporanController extends Controller
         ->where('id_banjars', $banjarId)
         ->get(); 
 
-        return view('user.pelaporan.index', compact('laporanBulanTahun', 'sumberDayaManusia', 'usias','pendidikans','matapencaharianpokoks','agamas','kewarganegaraans','etniss','cacats','tenagakerjas','kualitasangkatankerjas' ))
+        return view('user.pelaporan.index', compact('laporanBulanTahun', 'sumberDayaManusia', 'usias','pendidikans','matapencaharianpokoks','agamas','kewarganegaraans','etniss','cacats','tenagakerjas','kualitasangkatankerjas','laporans' ))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 

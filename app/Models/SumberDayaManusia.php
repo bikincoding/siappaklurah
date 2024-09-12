@@ -15,6 +15,8 @@ class SumberDayaManusia extends Model
         'jumlah_total',
         'jumlah_kepala_keluarga',
         'kepadatan_penduduk',
+        'id_laporan_bulan_tahuns',
+        'id_banjars'
         // Other fields
     ];
 
