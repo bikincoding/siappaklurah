@@ -16,6 +16,8 @@ use App\Models\CacatMentalFisik;
 use App\Models\TenagaKerja;
 use App\Models\KualitasAngkatanKerja;
 use App\Models\KepalaLingkungan;
+use App\Models\UsulanDanaBantuan;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -31,6 +33,8 @@ class DataKerobokanKajaController extends Controller
             ->distinct()
             ->select('laporan_bulan_tahuns.id', 'laporan_bulan_tahuns.bulan', 'laporan_bulan_tahuns.tahun')
             ->get();
+
+        
 
         // Ambil semua Banjar kecuali yang memiliki id 34 - Informasi Kepala Lingkungan ----------------------------------------------------------------------
         $kepalaLingkungans = KepalaLingkungan::with('banjar')
@@ -66,7 +70,70 @@ class DataKerobokanKajaController extends Controller
        
     }
 
-
+    public function cetak_usulan_data_bantuan($tahun) {
+        // Ambil data usulan bantuan berdasarkan tahun dan hitung jumlah per id_bantuans
+        $UsulanDanaBantuans = UsulanDanaBantuan::select('id_bantuans', DB::raw('count(*) as total'))
+            ->whereYear('tgl_musreng', $tahun)
+            ->groupBy('id_bantuans')
+            ->with('bantuan') // Eager loading untuk mengambil data bantuan terkait
+            ->get();
+        
+        // Definisikan gaya CSS untuk tabel
+        $html = '<style>
+            .human-resource-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+    
+            .human-resource-table th, .human-resource-table td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+    
+            .human-resource-table th {
+                background-color: #f2f2f2;
+            }
+    
+            .human-resource-table caption {
+                caption-side: top;
+                font-size: 1.5em;
+                font-weight: bold;
+                margin: 10px 0;
+            }
+        </style>';
+    
+        // Inisialisasi variabel HTML untuk menampung hasil tabel
+        $html .= '<table class="human-resource-table">';
+        $html .= '<caption style="text-align:center;">Daftar Usulan Data Bantuan Tahun ' . $tahun . '</caption>';
+        $html .= '<thead>
+                    <tr>
+                        <th style="text-align:center;">No</th>
+                        <th>Nama Usulan</th>
+                        <th style="text-align:center;">Jumlah</th>
+                    </tr>
+                  </thead>
+                  <tbody>';
+        
+        // Loop melalui setiap data dan tambahkan ke variabel HTML
+        $no = 1; // Inisialisasi nomor urut
+        foreach ($UsulanDanaBantuans as $UsulanDanaBantuan) {
+            $namaBantuan = $UsulanDanaBantuan->bantuan ? $UsulanDanaBantuan->bantuan->nama_bantuan : 'Tidak Diketahui';
+            $html .= '<tr>
+                        <td style="text-align:center;">' . $no++ . '</td>
+                        <td>' . $namaBantuan . '</td>
+                        <td style="text-align:center;">' . $UsulanDanaBantuan->total . '</td>
+                      </tr>';
+        }
+        
+        $html .= '</tbody></table>'; // Tutup tabel
+        
+        // Kembalikan hasil dalam bentuk respon HTML
+        return response($html);
+    }
+    
+    
     public function cetak_lingkungan_kaling($id)
     {
 

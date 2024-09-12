@@ -10,5 +10,8 @@ class Bantuan extends Model
     use HasFactory;
     protected $fillable = ['nama_bantuan'];
 
-   
+    public function usulanDanaBantuan()
+    {
+        return $this->hasMany(UsulanDanaBantuan::class, 'id_bantuans');
+    }
 }

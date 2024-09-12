@@ -151,6 +151,68 @@
         </div>
     </header>
 
+    <section id="siGab" class="section text-center">
+        <div class="container">
+            <h2 class="">SiGAB</h2>
+            <p class="card-text">Detail informasi mengenai Usulan Data Bantuan akan ditampilkan di sini.</p>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="container mt-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-3 mb-3 mb-md-0">
+                                        <div class="nav flex-column nav-pills border p-3" id="v-pills-tab"
+                                            role="tablist" aria-orientation="vertical">
+
+
+                                            <button class="nav-link show-data-SiGAB active" data-tahun="2024"
+                                                onclick="setActive(this)">
+                                                2024
+                                            </button>
+                                            <button class="nav-link show-data-SiGAB" data-tahun="2025"
+                                                onclick="setActive(this)">
+                                                2025
+                                            </button>
+
+                                            <script>
+                                            function setActive(button) {
+                                                // Hapus kelas 'active' dari semua tombol
+                                                document.querySelectorAll('.show-data-SiGAB').forEach(function(btn) {
+                                                    btn.classList.remove('active');
+                                                });
+
+                                                // Tambahkan kelas 'active' ke tombol yang diklik
+                                                button.classList.add('active');
+                                            }
+                                            </script>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <div class="tab-content" id="v-pills-tabContent">
+                                            <div class="tab-pane fade show active" id="v-pills-showdata" role="tabpanel"
+                                                aria-labelledby="v-pills-showdata-tab">
+                                                <div class="border p-3">
+                                                    <div id="showdata-SiGAB">Pilih laporan tahunan yang ingin anda lihat
+                                                        dengan cara memilih/klik menu tahun yang tersedia</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="kerobokanKaja" class="section text-center">
         <div class="container">
             <h2 class="">Data Kerobokan Kaja</h2>
@@ -213,11 +275,6 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-
-
-
-
-
                             <div class="container mt-4">
                                 <div class="row">
                                     @foreach ($kepalaLingkungans as $kepalaLingkungan)
@@ -372,13 +429,44 @@
                     console.error('Error:',
                         xhr);
                     $('#showdata').html(
-                        'An error occurred while retrieving the data.'
+                        'cetak_lingkungan_kerobokan_kaja error'
                     );
                 }
             });
         });
     });
     </script>
+
+
+
+    <script>
+    $(document).ready(function() {
+        $('.show-data-SiGAB').click(function(event) {
+            event.preventDefault();
+
+            let tahun = $(this).data('tahun');
+
+            $.ajax({
+                url: '/cetak_usulan_data_bantuan/' +
+                    tahun,
+                type: 'GET',
+                success: function(response) {
+                    $('#showdata-SiGAB').html(
+                        response);
+                },
+                error: function(xhr) {
+                    console.error('Error:',
+                        xhr);
+                    $('#showdata-SiGAB').html(
+                        'cetak_usulan_data_bantuan error'
+                    );
+                }
+            });
+        });
+    });
+    </script>
+
+
 
 
     <script>
@@ -428,7 +516,7 @@
                 error: function(xhr) {
                     console.error('Error:', xhr);
                     $('#showdatalingkungan').html(
-                        'An error occurred while retrieving the data.');
+                        'cetak_lingkungan_kaling error');
                 }
             });
         });
@@ -492,7 +580,7 @@
                             xhr);
                         $('#showdatalingkunganlaporan')
                             .html(
-                                'An error occurred while retrieving the data.'
+                                'cetak_lingkungan_kaling_laporan error'
                             );
                     }
                 });

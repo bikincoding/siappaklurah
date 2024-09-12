@@ -41,6 +41,10 @@ Route::get('/', function () {
 
 Route::get('/data_kerobokan_kaja', [App\Http\Controllers\DataKerobokanKajaController::class, 'index'])->name('data_kerobokan_kaja.index');
 Route::get('/cetak_lingkungan_kerobokan_kaja/{id}', [DataKerobokanKajaController::class, 'cetak_lingkungan_kerobokan_kaja'])->name('cetak_lingkungan_kerobokan_kaja');
+
+Route::get('/cetak_usulan_data_bantuan/{tahun}', [DataKerobokanKajaController::class, 'cetak_usulan_data_bantuan'])->name('cetak_usulan_data_bantuan');
+
+
 Route::get('/cetak_lingkungan_kaling/{id}', [DataKerobokanKajaController::class, 'cetak_lingkungan_kaling'])->name('cetak_lingkungan_kaling');
 Route::get('/cetak_lingkungan_kaling_laporan/{id}/{id2}', [DataKerobokanKajaController::class, 'cetak_lingkungan_kaling_laporan'])->name('cetak_lingkungan_kaling_laporan');
 
