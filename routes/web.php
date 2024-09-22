@@ -39,6 +39,10 @@ Route::get('/', function () {
     }
 });
 
+Route::get('/check-url', function () {
+    return config('app.url');
+});
+
 Route::get('/data_kerobokan_kaja', [App\Http\Controllers\DataKerobokanKajaController::class, 'index'])->name('data_kerobokan_kaja.index');
 Route::get('/cetak_lingkungan_kerobokan_kaja/{id}', [DataKerobokanKajaController::class, 'cetak_lingkungan_kerobokan_kaja'])->name('cetak_lingkungan_kerobokan_kaja');
 
