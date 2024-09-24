@@ -116,6 +116,23 @@ class DataBantuanController extends Controller
         return $response;
     }
 
+    public function destroy($id)
+    {
+        $usulan = UsulanDanaBantuan::findOrFail($id);
+
+        // Hapus file yang terkait jika diperlukan, contoh:
+        if ($usulan->usulan_ktp && Storage::exists('public/usulan_ktp/' . $usulan->usulan_ktp)) {
+            Storage::delete('public/usulan_ktp/' . $usulan->usulan_ktp);
+        }
+
+        // Hapus data dari database
+        $usulan->delete();
+
+        return redirect()->route('data_bantuan')
+            ->with('success', 'Data bantuan berhasil dihapus');
+    }
+
+
 
     
 }

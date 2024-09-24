@@ -49,6 +49,7 @@ Route::get('/cetak_lingkungan_kerobokan_kaja/{id}', [DataKerobokanKajaController
 Route::get('/cetak_usulan_data_bantuan/{tahun}', [DataKerobokanKajaController::class, 'cetak_usulan_data_bantuan'])->name('cetak_usulan_data_bantuan');
 
 
+
 Route::get('/cetak_lingkungan_kaling/{id}', [DataKerobokanKajaController::class, 'cetak_lingkungan_kaling'])->name('cetak_lingkungan_kaling');
 Route::get('/cetak_lingkungan_kaling_laporan/{id}/{id2}', [DataKerobokanKajaController::class, 'cetak_lingkungan_kaling_laporan'])->name('cetak_lingkungan_kaling_laporan');
 
@@ -78,6 +79,7 @@ Route::middleware(['admin', 'auto.logout'])->group(function () {
     Route::get('/cetak_laporan_dana_bantuan', [App\Http\Controllers\DataBantuanController::class, 'cetak_laporan'])->name('cetak_laporan_dana_bantuan');
 
     Route::get('/data_bantuan', [App\Http\Controllers\DataBantuanController::class, 'index'])->name('data_bantuan');
+    Route::delete('/data_bantuan/{id}', [DataBantuanController::class, 'destroy'])->name('data_bantuan.destroy');
     Route::get('/data_penduduk', [App\Http\Controllers\DataPendudukController::class, 'index'])->name('data_penduduk');
     Route::get('/banjar', [App\Http\Controllers\BanjarController::class, 'index'])->name('banjar');
     Route::resource('banjars', App\Http\Controllers\BanjarController::class);

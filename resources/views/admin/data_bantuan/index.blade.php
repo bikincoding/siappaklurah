@@ -105,6 +105,16 @@
                                 <a class="btn btn-sm btn-danger" href="#" data-bs-toggle="modal"
                                     data-bs-target="#rejectModal{{ $UsulanDanaBantuan->id }}"><i
                                         class="bi bi-x-circle-fill"></i></a>
+                                <!-- Tombol untuk memicu modal konfirmasi delete -->
+                                <form action="{{ route('data_bantuan.destroy', $UsulanDanaBantuan->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
 
 
                                 <!-- Modal Konfirmasi Diterima -->

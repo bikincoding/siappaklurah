@@ -2,4 +2,29 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/u1039741/public_html/siappaklurah.bikincoding.com
-    - /bin/cp -R images $DEPLOYPATH
+
+    # 1. Install Composer dependencies
+    - /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader --prefer-dist
+
+    # 2. Copy the Laravel application to the deployment path
+    - /bin/cp -R * $DEPLOYPATH
+
+    # 3. Set the correct permissions for storage and bootstrap/cache directories
+    - /bin/chmod -R 775 $DEPLOYPATH/storage
+    - /bin/chmod -R 775 $DEPLOYPATH/bootstrap/cache
+
+    # 4. Copy the .env file
+    - /bin/cp .env $DEPLOYPATH/.env
+
+    # 5. Generate a new application key
+    - php $DEPLOYPATH/artisan key:generate
+
+    # 6. Run Laravel optimizations
+    - php $DEPLOYPATH/artisan config:cache
+    - php $DEPLOYPATH/artisan route:cache
+    - php $DEPLOYPATH/artisan view:cache
+
+    # 7. Set correct permissions again (optional, but recommended for security)
+    - /bin/chmod -R 755 $DEPLOYPATH
+    - /bin/chmod -R 775 $DEPLOYPATH/storage
+    - /bin/chmod -R 775 $DEPLOYPATH/bootstrap/cache

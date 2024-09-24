@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/u1039741/public_html/siappaklurah.bikincoding.com
-    - /bin/cp -R images $DEPLOYPATH
