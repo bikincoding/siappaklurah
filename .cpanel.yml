@@ -20,8 +20,11 @@ deployment:
     - php $DEPLOYPATH/artisan key:generate
 
     # 6. Run Laravel optimizations
+    - php $DEPLOYPATH/artisan config:clear
     - php $DEPLOYPATH/artisan config:cache
+    - php $DEPLOYPATH/artisan route:clear
     - php $DEPLOYPATH/artisan route:cache
+    - php $DEPLOYPATH/artisan view:clear
     - php $DEPLOYPATH/artisan view:cache
 
     # 7. Set correct permissions again (optional, but recommended for security)
