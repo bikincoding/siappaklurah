@@ -9,7 +9,7 @@ deployment:
     # 2. Copy the Laravel application to the deployment path
     - /bin/cp -R * $DEPLOYPATH
 
-    # 3. Set the correct permissions for storage and bootstrap/cache directories
+    # 3. Set the correct permissions for storage and bootstrap/cache directorie
     - /bin/chmod -R 775 $DEPLOYPATH/storage
     - /bin/chmod -R 775 $DEPLOYPATH/bootstrap/cache
 
